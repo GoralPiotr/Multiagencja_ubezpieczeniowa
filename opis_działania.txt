@@ -1,0 +1,172 @@
+Samodzielny projekt bazy danych, którego grupą docelową są pracownicy mutliagnecji ubezpieczeniowej.
+Za pośrednictwem odpowiednich obiektów bazodanowych, użytkownik jest wstanie zapewnieć podstawową
+funkcjonalność w prowadzeniu biznesu związanego ze sprzedażą ubezpieczeń. Projekt jest cały czas
+rozwijany i dodawane są nowe fuknkcjonalności i rozwijane jego struktury. 
+
+Poniżej opis najważniejszych funkcjonalności:
+
+-- poprzez procedurę sprawdzamy dane o pracownikach. Użytkownicy z różnymi uprawnieniami
+zobaczą wyłącznie kolumnmy, które są dla nich niezbędne. 
+
+exec pracownicy.pokaż_pracowników
+
+
+-- za sprawą procedury dodajemy pracownika, który będzie bedzie zatrudniony w firmie
+
+exec pracownicy.dodaj_zatrudnionego
+@imię ='Artur',
+@nazwisko = 'Maki',
+@pesel = '700203**573',
+@miejscowość = 'Sosnowiec',
+@ulica = 'Mieroszewskich',
+@nr_budynku = 64,
+@nr_lokalu = 62,
+@kod_pocztowy = '41-200',
+@nr_tel_prywatny ='609329011',
+@email_prywatny ='maki5@gmail.com',
+@nr_tel_służbowy = 1234567,
+@email_służbowy = 'artur.maki@ubezpieczenia.pl',
+@nr_konta_bankowego = '410215478988',
+@nazwa_banku = 'Milennium',
+@uwagi = 'bez doświadczenia'
+
+-- dodajemy umowę pracownika, od kiedy zaczyna pracę, gdzie będzie pracował, pensja etc 
+exec pracownicy.dodaj_umowę_zatrudnionego
+@nr_umowy = 201,
+@pesel = '700**341573',
+@nazwa_umowy = 'Umowa o pracę',
+@początek_umowy = '20220816',
+@koniec_umowy = '20221231',
+@pensja = 3600,
+@nazwa_stanowiska = 'Mutliagent ubezpieczeniowy',
+@nazwa_miejscowości_placówki = 'Sosnowiec',
+@kod_pocztowy_placówki = '41-200',
+@nazwa_ulicy_placówki = 'Czekoladowa',
+@nr_budynku_placówki = 15,
+@nr_pomieszczenia_placówki = 20
+
+Procedura wykorzystywana do wprowadzania aneksów do umowy 
+pozycje obowiązkowe to nr umowy, aneksu i początek działania. 
+W przypadku braku uzupełnienia pozycji nieobowiązkowych procedura 
+zaczyta informacje z poprzednich warunków
+
+exec pracownicy.dodaj_aneks_do_umowy
+@nr_umowy = 1,
+@nr_aneksu = 10,
+@pensja = 10000 ,
+@id_stanowiska = 13,
+@id_placówka = 1,
+@początek = '20220901',
+@koniec = '20221231'
+
+---za pośrednictwem procedury dodajmy partnera do bazy danych 
+
+exec pracownicy.dodaj_partnera
+@nazwa = 'Multix Piotr_Gora',
+@nip  = 897478,
+@regon = 897479,
+@miejscowość = 'Sosnowiec',
+@ulica = 'Bylicka',
+@nr_budynku = 1,
+@nr_lokalu = 2,
+@kod_pocztowy = '41-200',
+@nr_tel_prywatny = 32647030,
+@email_prywatny = 'pg1',
+@nr_tel_służbowy = 609329015,
+@email_służbowy = 'pg2',
+@nr_konta_bankowego = 123456789,
+@nazwa_banku = 'PKO'
+
+
+----poprzez procedurę dodajemy umowę partnera
+exec pracownicy.dodaj_umowę_partnera
+@nr_umowy = 62,
+@nip  = 897478,
+@nazwa_umowy = 'Kontrakt b2b',
+@początek_umowy = '20220816',
+@koniec_umowy = '20221231',
+@pensja = 3600,
+@nazwa_stanowiska = 'Mutliagent ubezpieczeniowy',
+@nazwa_miejscowości_placówki = 'Sosnowiec', -- pozycja nieobowiązkowa
+@kod_pocztowy_placówki = '41-200', -- pozycja nieobowiązkowa
+@nazwa_ulicy_placówki = 'Czekoladowa', -- pozycja nieobowiązkowa
+@nr_budynku_placówki = 15, -- pozycja nieobowiązkowa
+@nr_pomieszczenia_placówki = 20 -- pozycja nieobowiązkowa
+
+
+
+
+
+
+/*
+za pośrednictwem procedury sprawdzamy klientów w naszej bazie danych.
+W przypadku braku podania nazwy, procedura pokaże nam wszystkich klientów.
+Zastsosowano kod dynamiczny. 
+*/
+exec pracownicy.wykaz_klientów
+
+/* po odnalezieniu klienta, posługując się jego id jesteśmy wstanie sprawdfzić polisy, jakie zawarł
+za pośrednictwem biura. 
+*/
+exec sprzedaż.pokaż_polisy
+@id_klienta = 1
+
+/* sprawdzamy informacje o płatnościach związanych z polis
+*/
+exec sprzedaż.pokaż_płatności
+@nr_polisy = 501
+
+/* za pośrecnictwem procedury. Osoby z odpowiednimi uprawnieniami mogą skasować polisę.
+*/
+exec sprzedaż.kasuj_polisę
+@nr_polisy = 1 
+
+
+Procedura stworzona aby użytkownik mógł dodawać nowych klientów do bazy danych
+
+exec sprzedaż.dodaj_klienta_indywidualnego
+@imię = 'Marian',
+@nazwisko = 'Lorenc',
+@pesel = '501208**472',
+@miejscowość ='Dąbrowa Górnicza',
+@ulica = 'Ludowa',
+@nr_budynku = 2,
+@nr_lokalu = 1,
+@kod_pocztowy = '41-300',
+@nr_tel_prywatny = 782542746,
+@email_prywatny = 'mariank1',
+@uwagi = 'dzwonić po 15'
+
+--- poprzez procedurę dodajemy klienta biznesowego
+exec sprzedaż.dodaj_klienta_biznesowego
+@nazwa = Matrix,
+@Nip = 102145,
+@regon = 124575,
+@miejscowość ='Sosnowiec',
+@ulica = 'Armii Ludu',
+@nr_budynku = 20,
+@nr_lokalu = 1,
+@kod_pocztowy = '41-200',
+@nr_tel = 111222333,
+@email = 'pot@hos',
+@uwagi = 'tylko email'
+
+
+
+Za sprawą procedury dodajemy nowy dokument ubezpieczniwoy do bazy danych 
+procedura w spsoób automatyczny rozkłada terminy rat w przypadku ich wystąpenia
+
+exec sprzedaż.wpisz_dokument
+@nr_polisy = 501,
+@id_klienta = 2,
+@nazwa_produktu = 'Hestia Biznes',
+@data_wystawienia_polisy = '20220810',
+@data_wpisania_polisy = '20220717',
+@początek_ubezpieczenia = '20220901',
+@koniec_ubezpieczenia = '20230831',
+@nazwa_statusu = 'nowe',
+@składka = 2135,
+@raty = 4,
+@forma_płatności = 'przelew',
+@termin_pierwszej_raty = '20220831'
+
